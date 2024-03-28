@@ -1,7 +1,9 @@
 Social Book
+
 Social Book is a Django-based social media platform where users can share images and interact with each other through comments and likes.
 
 Features
+
 User Authentication: Users can sign up, log in, and log out securely. Passwords are hashed for security.
 Upload Posts: Users can upload images along with captions to share with others.
 Interactions: Users can like posts and leave comments on them.
@@ -20,6 +22,7 @@ Installation
 5. Access the application at http://localhost:8000/ in your web browser.
 
 Technologies Used
+
 Python
 Django
 HTML/CSS
@@ -29,4 +32,5 @@ Contributing
 Contributions are welcome! If you find any bugs or have feature requests, please open an issue on the GitHub repository. If you would like to contribute code, feel free to open a pull request.
 
 License
+
 This project is licensed under the MIT License. See the LICENSE file for details.
