@@ -23,13 +23,11 @@ Installation
 
 Technologies Used
 
-Python
-Django
-HTML/CSS
-JavaScript
-SQLite (for development)
-Contributing
-Contributions are welcome! If you find any bugs or have feature requests, please open an issue on the GitHub repository. If you would like to contribute code, feel free to open a pull request.
+ 1. Python
+ 2. Django
+ 3. HTML/CSS
+ 4. JavaScript
+ 5. SQLite (for development)
 
 License
 
