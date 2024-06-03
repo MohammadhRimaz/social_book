@@ -8,6 +8,8 @@ import random
 from PIL import Image
 from .forms import CommentForm
 from django.http import JsonResponse
+from django.utils import timezone
+from datetime import timedelta
 
 #login_required is using for user's can't access home page without signin...
 @login_required(login_url='signin')
@@ -52,7 +54,16 @@ def index(request):
 
     suggestions_username_profile_list = list(chain(*username_profile_list))
 
-    return render(request, 'index.html', {'user_profile':user_profile, 'posts':feed_lists, 'suggestions_username_profile_list':suggestions_username_profile_list[:4]})
+    #Fetch active users
+    active_users = Profile.objects.filter(last_seen__gte=timezone.now() - timedelta(minutes=60)).exclude(user=user_object).order_by('?')[:9]
+
+    # Ensure the logged-in user is in the active users list
+    if user_profile not in active_users:
+        active_users = list(active_users)
+        active_users.insert(0, user_profile)
+
+
+    return render(request, 'index.html', {'user_profile':user_profile, 'posts':feed_lists, 'suggestions_username_profile_list':suggestions_username_profile_list[:4], 'active_users':active_users})
 
 @login_required(login_url='signin')
 def search(request):
@@ -111,7 +122,7 @@ def add_comment(request, post_id):
             comment.post = post
             comment.user = request.user
             comment.save()
-            return redirect('/')  # Redirect to the same page or any other desired page
+            return redirect('/') 
     else:
         form = CommentForm()
 
@@ -124,7 +135,7 @@ def get_comments_api(request, post_id):
     return JsonResponse({'comments': comments_data, 'user': str(request.user)})
 
 @login_required(login_url='signin')
-def delete_post(post_id):
+def delete_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     # Delete the post
     post.delete_post()
@@ -270,6 +281,7 @@ def signin(request):
 
         if user is not None:
             auth.login(request, user)
+            Profile.objects.filter(user=user).update(last_seen=timezone.now())
             return redirect('/')
         else:
             messages.info(request, 'Credentials Invalid')

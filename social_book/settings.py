@@ -26,8 +26,9 @@ SECRET_KEY = 'django-insecure-h3=t3&resw858_5#o36#!(u_go9m!_jxm**b3lz)k=yigm)umi
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-#'192.168.8.156' or '*' within the [] will give access to other devices can use this project....
+#'192.168.8.156', 'localhost', '127.0.0.1' or '*' within the [] will give access to other devices can use this project....
 #Also when you start up the project you need to type (python manage.py runserver 0.0.0.0:8000) in the cmd
+#If you want run this site on another device, Use this link http://192.168.8.156:8000
 ALLOWED_HOSTS = []
 
 
@@ -109,7 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Colombo'
 
 USE_I18N = True
 

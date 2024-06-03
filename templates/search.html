@@ -9,65 +9,106 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="favicon.png" rel="icon" type="image/png">
     <title>Search</title>
-    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{% static 'assets/css/icons.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/uikit.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/tailwind.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .header_inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .center-side {
+            flex-grow: 1;
+        }
+
+        .search-container {
+            flex: 1; /* Take up remaining space */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-container input[type="text"] {
+            padding: 20px;
+            width: 550px;
+        }
+
+        .search-container button[type="submit"] {
+            padding: 8px;
+            border: none;
+            background-color: #111010;
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-left: 5px;
+        }
+
+        .profile-image {
+            border: 1px solid black;
+            border-radius: 50%;
+        }
+
+        .inline-block {
+            display: inline-block;
+        }
+        a.bg-pink-500 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 40px; /* Adjust as needed */
+        }
+
+        a.bg-pink-500 ion-icon {
+            margin-bottom: 0; /* Remove any margin-bottom set by classes */
+        }
+    </style>
 </head>
 
 <body>
-            <form action="search" method="POST">
-            {% csrf_token %}
+           
             <header style="margin-top: -23px;">
                 <div class="header_inner">
                     <div class="left-side">
                         <!-- Logo -->
-                        <div id="logo" class=" uk-hidden@s">
+                        <div id="logo">
                             <a href="/">
-                                <!-- <b><h1 style="text-transform: uppercase;">Social Book</h1></b> -->
+                                <b><h1 style="text-transform: uppercase;">Social Book</h1></b>
                             </a>
                         </div>
-
-                        <!--<div class="triger" uk-toggle="target: #wrapper ; cls: sidebar-active">
-                            <i class="uil-bars"></i>
-                        </div>-->
-
-                        <!-- <div class="header_search"> -->
-                            
-                                <input type="text" name="username" placeholder="Search for username..">&nbsp; &nbsp;
+                    </div>
+            
+                    <div class="center-side">
+                        <!-- Search Box and Button (Centered) -->
+                        <form action="/search" method="POST" class="search-form">
+                            {% csrf_token %}
+                            <div class="search-container">
+                                <input type="text" name="username" placeholder="Search for username..">
                                 <button type="submit"><i class="fa fa-search fa-1x"></i></button>
-                            
-                            <!-- <div class="icon-search">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                </svg>
-                            </div> -->
-                        <!-- </div> -->
-
+                            </div>
+                        </form>
                     </div>
                     <div class="right-side lg:pr-4">
                         <!-- welcome user -->
-                        <a href="#" class="">
+                        <!--a href="profile.html" class="">
                             Welcome <b name="" class="">{{user.username}}&nbsp; &nbsp; &nbsp;</b>
-                        </a>
+                        </a-->
 
-                         <!-- upload -->
+                        <!-- upload -->
                         <a href="#"
                             class="bg-pink-500 flex font-bold hidden hover:bg-pink-600 hover:text-white inline-block items-center lg:block max-h-10 mr-4 px-4 py-2 rounded shado text-white">
-                            <ion-icon name="add-circle" class="-mb-1
-                             mr-1 opacity-90 text-xl uilus-circle"></ion-icon> New Post
+                            <ion-icon name="add-circle" class="-mb-1 mr-1 opacity-90 text-xl uilus-circle"></ion-icon> Upload Pics 
                         </a>
                          <!-- upload dropdown box -->
-                        <div uk-dropdown="pos: top-right;mode:click ; animation: uk-animation-slide-bottom-small" class="header_dropdown">
+                         <div uk-dropdown="pos: top-right;mode:click ; animation: uk-animation-slide-bottom-small" class="header_dropdown">
     
-                            <!-- notivication header -->
+                            <!-- notification header -->
                             <div class="px-4 py-3 -mx-5 -mt-4 mb-5 border-b">
-                                <h4>Upload Pics or Videos</h4>
+                                <h4>Upload Pics</h4>
                             </div>
     
                             <!-- notification contents -->
@@ -81,17 +122,39 @@
                                             <path d="M9 13h2v5a1 1 0 11-2 0v-5z" />
                                         </svg>
                                     </div>
-
-                                    <p class="my-3 leading-6"> Upload pics ..
-                                    </p>
-                                    <div uk-form-custom>
-                                        <input type="file">
-                                        <a href="#" class="button soft-warning small"> Choose pics</a>
+                                
+                                <form action="{% url 'upload' %}" method="POST" enctype="multipart/form-data" id="uploadForm">
+                                    {% csrf_token %}
+                                    <p class="my-3 leading-6"> Upload pics </p>
+                                    <div>
+                                        <input type="file" name="image_upload" id="imageUploadInput">
+                                        <!--a href="#" class="button soft-warning small"> Choose file</a>-->
+                                        <textarea class="button soft-warning small" name="caption" placeholder="caption..."></textarea>
+                                        <br>
+                                        <button class="button bg-blue-700" type="button" onclick="validateAndUpload()">Upload</button>
                                     </div>
+                                </form>
+
+                                <script>
+                                    function validateAndUpload() {
+                                        // Get the file input and caption textarea
+                                        var imageInput = document.getElementById('imageUploadInput');
+                                        var captionInput = document.getElementsByName('caption')[0];
+                                
+                                        // Check if an image is selected
+                                        if (imageInput.files.length === 0) {
+                                            alert('Please select an Image.');
+                                            return;
+                                        }
+                                
+                                        // If an image is selected, submit the form
+                                        document.getElementById('uploadForm').submit();
+                                    }
+                                </script>
     
-                                    <a href="#" class="uk-text-muted mt-3 uk-link"
+                                    <!--<a href="#" class="uk-text-muted mt-3 uk-link"
                                         uk-toggle="target: .choose-upload ;  animation: uk-animation-slide-right-small, uk-animation-slide-left-medium; queued: true">
-                                        <!--Or Import Video--> </a>
+                                        Or Import Video </a>-->
                                 </div>
     
                                 <div class="uk-flex uk-flex-column choose-upload" hidden>
@@ -108,14 +171,12 @@
                                         <div class="uk-width-auto"> <button type="submit" class="button soft-warning -ml-2">
                                                 Import </button> </div>
                                     </form>
-                                    <a href="#" class="uk-text-muted mt-3 uk-link"
-                                        uk-toggle="target: .choose-upload ; animation: uk-animation-slide-left-small, uk-animation-slide-right-medium; queued: true">
+                                    <a href="#" class="uk-text-muted mt-3 uk-link" uk-toggle="target: .choose-upload ; animation: uk-animation-slide-left-small, uk-animation-slide-right-medium; queued: true">
                                         Or Upload Video </a>
                                 </div>
-    
                             </div>
                             <div class="px-4 py-3 -mx-5 -mb-4 mt-5 border-t text-sm">
-                                Your File size Must be Maxmium 999MB
+                                Your Image size Must be Maxmium 20MB
                             </div>
                         </div>
                         
@@ -152,37 +213,14 @@
                         <!-- <a href="#" class="header-links-item">
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="0.5em" height="0.5em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16"><g fill="currentColor"><path d="M2 0a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2.5a1 1 0 0 1 .8.4l1.9 2.533a1 1 0 0 0 1.6 0l1.9-2.533a1 1 0 0 1 .8-.4H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/></g></svg>
                         </a> -->
-                        <div uk-drop="mode: click;offset: 4" class="header_dropdown">
-                            <h4
-                                class="-mt-5 -mx-5 bg-gradient-to-t from-gray-100 to-gray-50 border-b font-bold px-6 py-3">
-                                Messages </h4>
-                            <ul class="dropdown_scrollbar" data-simplebar>
-                                <li>
-                                    <a href="#">
-                                        <div class="drop_avatar"> <img src="{% static 'assets/images/avatars/avatar-1.jpg' %}" alt="">
-                                        </div>
-                                        <div class="drop_content">
-                                            <strong> Taiye </strong> <time> 6:43 PM</time>
-                                            <p> hi tomi </p>
-                                        </div>
-                                    </a>
-                                </li>
-                                
-
-
-                            </ul>
-                            <a href="#" class="see-all">See all</a>
-                        </div>
 
                         <!-- profile -->
-
                         <a href="#">
-                            <img src="{{ user_profile.profileimg.url }}" class="header-avatar" alt="">
+                            <img src="{{ user_profile.profileimg.url }}" class="header-avatar profile-image" alt="">
                         </a>
                         <div uk-drop="mode: click;offset:9" class="header_dropdown profile_dropdown border-t">
                             <ul>
                                 <li><a href="/settings"> Account setting </a> </li>
-                                <!-- <li><a href="explore.html">explore </a> </li> -->
                                 <li><a href="/logout"> Log Out</a></li>
                             </ul>
                         </div>
@@ -190,7 +228,6 @@
                     </div>
                 </div>
             </header>
-            </form>
             
             <div style="margin-left: 250px; margin-right: 250px;">
                 
@@ -249,7 +286,7 @@
                         display: inline-block;
                         margin: -20px 0 -20px -20px;
                         float: left;
-                        width: 200px
+                        width: 200px;
                     }
                 }
 
@@ -329,8 +366,8 @@
                                 <div class="row">
                                     <div class="col-sm-9">
                                         <h4 class="search-result-item-heading"><a href="/profile/{{users.user}}"><b>@{{users.user}}</b></a></h4>
-                                        <p class="info">{{users.location}}</p>
-                                        <p class="description">{{users.bio}}</p>
+                                        <p class="info"><b>{{users.location}}</b></p>
+                                        <p class="description"><b>{{users.bio}}</b></p>
                                     </div>
                                     <!-- <div class="col-sm-3 text-align-center">
                                         <p class="value3 mt-sm">$9, 700</p>
@@ -368,13 +405,6 @@
 
     </div>
 
-
-
-
-
-
-
-
  <!-- Scripts
     ================================================== -->
     <script src="{% static 'assets/js/tippy.all.min.js' %}"></script>  
@@ -383,9 +413,8 @@
     <script src="{% static 'assets/js/simplebar.js' %}"></script>
     <script src="{% static 'assets/js/custom.js' %}"></script>
 
+    <script src="https://unpkg.com/ionicons@5.2.3/dist/ionicons.js"></script>
 
-    <script src="{% static '../../unpkg.com/ionicons%405.2.3/dist/ionicons.js' %}"></script>
 </body>
-
 
 </html>
